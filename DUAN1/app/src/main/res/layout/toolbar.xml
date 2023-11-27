@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fitsSystemWindows="true"
+    android:minHeight="?attr/actionBarSize"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|top">
+
+        <!-- Your original icongiohang ImageView -->
+        <ImageView
+            android:id="@+id/icongiohang"
+            android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:paddingEnd="16dp"
+        android:src="@drawable/icongh"
+        android:scaleType="fitCenter"
+        android:contentDescription="Your Image Description" />
+
+        <!-- Badge TextView -->
+        <TextView
+            android:id="@+id/badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/slspgio"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="end|top"
+            android:text="5"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+             />
+    </FrameLayout>
+
+</androidx.appcompat.widget.Toolbar>

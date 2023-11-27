@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp">
+
+    <SearchView
+        android:id="@+id/searchViewad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/search"
+        android:iconifiedByDefault="false"
+        android:paddingRight="10dp"
+        android:paddingBottom="5dp"
+        android:queryHint="Tìm kiếm theo tên..." />
+
+    <ListView
+        android:id="@+id/lvsp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/searchViewad"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="#00BFA5"
+        android:src="@drawable/floatbutton"/>
+</RelativeLayout>
+
+

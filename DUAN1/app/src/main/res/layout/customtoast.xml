@@ -1,0 +1,21 @@
+<!-- res/layout/custom_toast.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/custom_toast_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/toastradius"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:backgroundTintMode="multiply"
+    android:clipToOutline="true"
+    android:outlineProvider="background">
+
+    <TextView
+        android:id="@+id/custom_toast_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:gravity="center"
+        android:text="Tài khoản không đúng" />
+
+</LinearLayout>

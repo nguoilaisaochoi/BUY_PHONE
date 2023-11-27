@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+ <group >
+     <item android:id="@+id/sanpham"
+         android:title="Sản phẩm"
+         android:icon="@drawable/box"
+         android:checkable="true"
+         />
+     <item android:id="@+id/sanphamadmin"
+         android:title="Quản lí sản phẩm"
+         android:icon="@drawable/box"
+         android:checkable="true"
+         />
+     <item android:id="@+id/giohang"
+         android:title="Giỏ hàng"
+         android:icon="@drawable/baseline_shopping_cart_24"
+         android:checkable="true"
+         />
+     <item android:id="@+id/qlhang"
+         android:title="Quản lí hãng"
+         android:icon="@drawable/box"
+         android:checkable="true"
+         />
+ </group>
+    <item android:title="Thống kê">
+        <menu>
+            <item
+                android:id="@+id/hoadon"
+                android:checkable="true"
+                android:icon="@drawable/donhang"
+                android:title="Đơn hàng" />
+            <item
+                android:id="@+id/dt"
+                android:checkable="true"
+                android:icon="@drawable/box"
+                android:title="Doanh thu" />
+        </menu>
+    </item>
+    <item android:title="Người dùng">
+        <menu>
+            <item
+                android:id="@+id/dmk"
+                android:checkable="true"
+                android:icon="@drawable/baseline_password_24"
+                android:title="Đổi mật khẩu" />
+            <item
+                android:id="@+id/thongtin"
+                android:checkable="true"
+                android:title="Thông tin tài khoản"
+                android:icon="@drawable/baseline_account_circle_24"/>
+            <item
+                android:id="@+id/dx"
+                android:checkable="true"
+                android:icon="@drawable/baseline_logout_24"
+                android:title="Đăng xuất" />
+
+        </menu>
+    </item>
+</menu>
