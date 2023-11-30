@@ -46,6 +46,8 @@ public class HoaDon_ADMIN_Adapter extends ArrayAdapter<GioHang> {
     Button tuchoi,giaohang;
 
     LinearLayout ttxacnhan;
+
+    Integer check=0;
     public HoaDon_ADMIN_Adapter(@NonNull Context context, HoaDonFragment hoaDonKHFragment, ArrayList<GioHang> lists) {
         super(context, 0, lists);
         this.context = context;
@@ -99,11 +101,20 @@ public class HoaDon_ADMIN_Adapter extends ArrayAdapter<GioHang> {
             headerTextView.setText("Ngày: " + dateKey);
             StringBuilder allsp = new StringBuilder();
             for (GioHang item : groupItems) {
+                //tinh trang
+                tinhtrang=v.findViewById(R.id.tvtinhtrang);
+                String ttrang=item.getTinhtrang();
+                ttxacnhan=v.findViewById(R.id.xacnhan);
                 tenkh=v.findViewById(R.id.tvtenkh);
                 KhachHang kh=khachHangDAO.getID(item.getMakh());
                 tenkh.setText("Tên khách hàng: "+kh.getHoTen());
                 SanPham sanPham = sanPhamDAO.getID(String.valueOf(item.getMasp()));
-                allsp.append(sanPham.getTensp());
+                if (sanPham!=null){
+                    allsp.append(sanPham.getTensp());
+                }else{
+                    allsp.append("Sản phẩm đã bị xoá");
+                    check=-1;
+                }
                 allsp.append(" ("+item.getSoluong()+")");
                 allsp.append(", ");
                 tongtien=v.findViewById(R.id.tvtongtien);
@@ -113,23 +124,27 @@ public class HoaDon_ADMIN_Adapter extends ArrayAdapter<GioHang> {
                 sdt.setText("Số điện thoại: "+kh.getSdt());
                 diachi=v.findViewById(R.id.tvdiachi);
                 diachi.setText("Địa chỉ: "+kh.getDiachi());
-                ttxacnhan=v.findViewById(R.id.xacnhan);
-                String ttrang=item.getTinhtrang();
-                tinhtrang=v.findViewById(R.id.tvtinhtrang);
-                if (ttrang.equals("Chờ xử lí")) {
-                    // Nếu tình trạng là "Chờ xử lý", thêm chữ "Tình trạng:" và đặt màu sắc thành vàng
-                    tinhtrang.setText(ttrang);
-                    tinhtrang.setTextColor(0xFFF39C12);
-                    ttxacnhan.setVisibility(View.VISIBLE);
-                } else if (ttrang.equals("Hết hàng")) {
-                    tinhtrang.setText(ttrang);
+                if (check>=0){
+                    if (ttrang.equals("Chờ xử lí")) {
+                        tinhtrang.setText(ttrang);
+                        tinhtrang.setTextColor(0xFFF39C12);
+                        ttxacnhan.setVisibility(View.VISIBLE);
+                    } else if (ttrang.equals("Hết hàng")) {
+                        tinhtrang.setText(ttrang);
+                        tinhtrang.setTextColor(0xFFCD1212);
+                        ttxacnhan.setVisibility(View.GONE);
+                    } else if (ttrang.equals("Đã giao")) {
+                        tinhtrang.setText(ttrang);
+                        tinhtrang.setTextColor(0xFF27AE60);
+                        ttxacnhan.setVisibility(View.GONE);
+                    }
+                }else{
+                    String Del="Bị huỷ do có sản phảm không tồn tại";
+                    tinhtrang.setText(Del);
                     tinhtrang.setTextColor(0xFFCD1212);
                     ttxacnhan.setVisibility(View.GONE);
-                } else if (ttrang.equals("Đã giao")) {
-                    tinhtrang.setText(ttrang);
-                    tinhtrang.setTextColor(0xFF27AE60);
-                    ttxacnhan.setVisibility(View.GONE);
                 }
+
                 tuchoi=v.findViewById(R.id.btn_tuchoi);
                 tuchoi.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -157,7 +172,7 @@ public class HoaDon_ADMIN_Adapter extends ArrayAdapter<GioHang> {
             }
             this.tensp.setText("Sản phẩm đã mua: \n" + tensp);
         }
-
+        check=0;
         return v;
     }
 

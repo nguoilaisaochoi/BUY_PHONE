@@ -59,8 +59,6 @@ public class HangSanPhamFragment extends Fragment {
     static HangSpDAO dao;
 
 
-
-
     ArrayList<HangSp> list;
 
     HangSanPhamAdapter adapter;
@@ -70,7 +68,7 @@ public class HangSanPhamFragment extends Fragment {
     EditText tvhangsp;
 
     TextView tvmahang;
-    Button them,huy,chonanh;
+    Button them, huy, chonanh;
 
     HangSp item;
 
@@ -84,6 +82,7 @@ public class HangSanPhamFragment extends Fragment {
     SearchView searchView;
 
     private ActivityResultLauncher<Intent> galleryLauncher;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -91,7 +90,7 @@ public class HangSanPhamFragment extends Fragment {
         lvsp = v.findViewById(R.id.lvsp);
         dao = new HangSpDAO(getActivity());
         fab = v.findViewById(R.id.fab);
-        searchView=v.findViewById(R.id.searchViewad);
+        searchView = v.findViewById(R.id.searchViewad);
         capnhatlv();
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,17 +117,15 @@ public class HangSanPhamFragment extends Fragment {
                 return false;
             }
         });
-        galleryLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK) {
-                        Intent data = result.getData();
-                        if (data != null) {
-                            Uri imageUri = data.getData();
-                            handleImageResult(imageUri);
-                        }
-                    }
-                });
+        galleryLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK) {
+                Intent data = result.getData();
+                if (data != null) {
+                    Uri imageUri = data.getData();
+                    handleImageResult(imageUri);
+                }
+            }
+        });
         return v;
     }
 
@@ -143,16 +140,14 @@ public class HangSanPhamFragment extends Fragment {
         builder.setTitle("Delete");
         builder.setMessage("Muốn xoá?!");
         builder.setCancelable(true);
-        builder.setPositiveButton(
-                "Xoá", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        dao.delete(ID);
-                        capnhatlv();
-                        dialog.cancel();
-                    }
-                }
-        );
+        builder.setPositiveButton("Xoá", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                dao.delete(ID);
+                capnhatlv();
+                dialog.cancel();
+            }
+        });
         builder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -163,15 +158,15 @@ public class HangSanPhamFragment extends Fragment {
         builder.show();
     }
 
-    protected void opendialog(final Context context, final int type){
+    protected void opendialog(final Context context, final int type) {
         dialog = new Dialog(context);
         dialog.setContentView(R.layout.dialog_them_hang_sanpham);
-        tvmahang=dialog.findViewById(R.id.tv_hmahang);
-        tvhangsp=dialog.findViewById(R.id.et_tenhang);
-        huy=dialog.findViewById(R.id.btn_hhuy);
-        them=dialog.findViewById(R.id.btn_hthem);
-        chonanh=dialog.findViewById(R.id.btn_hanh);
-        anh=dialog.findViewById(R.id.iv_hanh);
+        tvmahang = dialog.findViewById(R.id.tv_hmahang);
+        tvhangsp = dialog.findViewById(R.id.et_tenhang);
+        huy = dialog.findViewById(R.id.btn_hhuy);
+        them = dialog.findViewById(R.id.btn_hthem);
+        chonanh = dialog.findViewById(R.id.btn_hanh);
+        anh = dialog.findViewById(R.id.iv_hanh);
 
         //
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
@@ -195,12 +190,7 @@ public class HangSanPhamFragment extends Fragment {
             //anh.setImageURI(item.getAnh());
             if (item != null) {
                 try {
-                    Glide.with(context)
-                            .load(item.getAnh())
-                            .dontAnimate()
-                            .override(240, 240)
-                            .skipMemoryCache(false)
-                            .error(R.drawable.baseline_image_24) // Add an error drawable
+                    Glide.with(context).load(item.getAnh()).dontAnimate().override(240, 240).skipMemoryCache(false).error(R.drawable.baseline_image_24) // Add an error drawable
                             .diskCacheStrategy(DiskCacheStrategy.ALL) // Sử dụng cache đĩa
                             .listener(new RequestListener<Drawable>() {
                                 @Override
@@ -212,8 +202,7 @@ public class HangSanPhamFragment extends Fragment {
                                 public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                                     return false;
                                 }
-                            })
-                            .into(anh);
+                            }).into(anh);
                 } catch (Exception e) {
                 }
             }
@@ -221,66 +210,70 @@ public class HangSanPhamFragment extends Fragment {
         them.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                item = new HangSp();
-                item.setTenloai(String.valueOf(tvhangsp.getText()));
-                item.setAnh(selectedImageUri);
-                // Lưu đường dẫn ảnh vào cơ sở dữ liệu
-                if (type == 0) {
-                    if (dao.insert(item) > 0) {
-                        Context context = getContext();
-                        LayoutInflater inflater = getLayoutInflater();
-                        View customToastView = inflater.inflate(R.layout.customtoast, null);
-                        TextView textView = customToastView.findViewById(R.id.custom_toast_message);
-                        textView.setText("Đã thêm");
+                if (valiable() > 0) {
+                    item = new HangSp();
+                    item.setTenloai(String.valueOf(tvhangsp.getText()));
+                    item.setAnh(selectedImageUri);
+                    // Lưu đường dẫn ảnh vào cơ sở dữ liệu
+                    if (type == 0) {
+                        if (dao.insert(item) > 0) {
+                            Context context = getContext();
+                            LayoutInflater inflater = getLayoutInflater();
+                            View customToastView = inflater.inflate(R.layout.customtoast, null);
+                            TextView textView = customToastView.findViewById(R.id.custom_toast_message);
+                            textView.setText("Đã thêm");
 
-                        Toast customToast = new Toast(context);
-                        customToast.setDuration(Toast.LENGTH_SHORT);
-                        customToast.setView(customToastView);
-                        customToast.show();
-                        //Toast.makeText(context, "Đã thêm", Toast.LENGTH_SHORT).show();
+                            Toast customToast = new Toast(context);
+                            customToast.setDuration(Toast.LENGTH_SHORT);
+                            customToast.setView(customToastView);
+                            customToast.show();
+                            //Toast.makeText(context, "Đã thêm", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Context context = getContext();
+                            LayoutInflater inflater = getLayoutInflater();
+                            View customToastView = inflater.inflate(R.layout.customtoast, null);
+                            TextView textView = customToastView.findViewById(R.id.custom_toast_message);
+                            textView.setText("Không thêm được");
+
+                            Toast customToast = new Toast(context);
+                            customToast.setDuration(Toast.LENGTH_SHORT);
+                            customToast.setView(customToastView);
+                            customToast.show();
+                            //Toast.makeText(context, "Không thêm được", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
-                        Context context = getContext();
-                        LayoutInflater inflater = getLayoutInflater();
-                        View customToastView = inflater.inflate(R.layout.customtoast, null);
-                        TextView textView = customToastView.findViewById(R.id.custom_toast_message);
-                        textView.setText("Không thêm được");
+                        item.setMahang(Integer.parseInt(tvmahang.getText().toString()));
+                        if (dao.update(item) > 0) {
+                            Context context = getContext();
+                            LayoutInflater inflater = getLayoutInflater();
+                            View customToastView = inflater.inflate(R.layout.customtoast, null);
+                            TextView textView = customToastView.findViewById(R.id.custom_toast_message);
+                            textView.setText("Đã sửa");
 
-                        Toast customToast = new Toast(context);
-                        customToast.setDuration(Toast.LENGTH_SHORT);
-                        customToast.setView(customToastView);
-                        customToast.show();
-                        //Toast.makeText(context, "Không thêm được", Toast.LENGTH_SHORT).show();
+                            Toast customToast = new Toast(context);
+                            customToast.setDuration(Toast.LENGTH_SHORT);
+                            customToast.setView(customToastView);
+                            customToast.show();
+                            //Toast.makeText(context, "Đã sửa", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Context context = getContext();
+                            LayoutInflater inflater = getLayoutInflater();
+                            View customToastView = inflater.inflate(R.layout.customtoast, null);
+                            TextView textView = customToastView.findViewById(R.id.custom_toast_message);
+                            textView.setText("Không sửa được");
+
+                            Toast customToast = new Toast(context);
+                            customToast.setDuration(Toast.LENGTH_SHORT);
+                            customToast.setView(customToastView);
+                            customToast.show();
+                            //Toast.makeText(context, "Không sửa được", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                } else {
-                    item.setMahang(Integer.parseInt(tvmahang.getText().toString()));
-                    if (dao.update(item) > 0) {
-                        Context context = getContext();
-                        LayoutInflater inflater = getLayoutInflater();
-                        View customToastView = inflater.inflate(R.layout.customtoast, null);
-                        TextView textView = customToastView.findViewById(R.id.custom_toast_message);
-                        textView.setText("Đã sửa");
+                    capnhatlv();
+                    dialog.dismiss();
 
-                        Toast customToast = new Toast(context);
-                        customToast.setDuration(Toast.LENGTH_SHORT);
-                        customToast.setView(customToastView);
-                        customToast.show();
-                        //Toast.makeText(context, "Đã sửa", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Context context = getContext();
-                        LayoutInflater inflater = getLayoutInflater();
-                        View customToastView = inflater.inflate(R.layout.customtoast, null);
-                        TextView textView = customToastView.findViewById(R.id.custom_toast_message);
-                        textView.setText("Không sửa được");
-
-                        Toast customToast = new Toast(context);
-                        customToast.setDuration(Toast.LENGTH_SHORT);
-                        customToast.setView(customToastView);
-                        customToast.show();
-                        //Toast.makeText(context, "Không sửa được", Toast.LENGTH_SHORT).show();
-                    }
                 }
-                capnhatlv();
-                dialog.dismiss();
+
             }
         });
         dialog.show();
@@ -291,6 +284,7 @@ public class HangSanPhamFragment extends Fragment {
             }
         });
     }
+
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
@@ -318,6 +312,7 @@ public class HangSanPhamFragment extends Fragment {
             Toast.makeText(getActivity(), "Không thể lấy đường dẫn ảnh", Toast.LENGTH_SHORT).show();
         }
     }
+
     private String getRealPathFromURI(Uri contentUri) {
         String[] projection = {MediaStore.Images.Media.DATA};
         Cursor cursor = requireContext().getContentResolver().query(contentUri, projection, null, null, null);
@@ -344,5 +339,23 @@ public class HangSanPhamFragment extends Fragment {
         adapter.clear();
         adapter.addAll(searchResults);
         adapter.notifyDataSetChanged();
+    }
+
+    public int valiable() {
+        int check = 1;
+        if (tvhangsp.getText().length() == 0) {
+            Context context = getContext();
+            LayoutInflater inflater = getLayoutInflater();
+            View customToastView = inflater.inflate(R.layout.customtoast, null);
+            TextView textView = customToastView.findViewById(R.id.custom_toast_message);
+            textView.setText("Không bỏ trống");
+
+            Toast customToast = new Toast(context);
+            customToast.setDuration(Toast.LENGTH_SHORT);
+            customToast.setView(customToastView);
+            customToast.show();
+            check = -1;
+        }
+        return check;
     }
 }

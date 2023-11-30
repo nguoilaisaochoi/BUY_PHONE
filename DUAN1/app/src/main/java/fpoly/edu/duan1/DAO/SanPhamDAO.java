@@ -61,13 +61,48 @@ public class SanPhamDAO {
         Cursor c = db.rawQuery(sql, selectionArgs);
         while (c.moveToNext()) {
             SanPham obj = new SanPham();
-            obj.setMahang(Integer.parseInt(c.getString(c.getColumnIndex("mahang"))));
-            obj.setMasp(Integer.parseInt(c.getString(c.getColumnIndex("masp"))));
-            obj.setTensp(c.getString(c.getColumnIndex("tensp")));
-            obj.setManhinh(Float.parseFloat(c.getString(c.getColumnIndex("manhinh"))));
-            obj.setGia(Integer.parseInt(c.getString(c.getColumnIndex("gia"))));
-            obj.setRam(Integer.parseInt(c.getString(c.getColumnIndex("ram"))));
-            obj.setDungluong(Integer.parseInt(c.getString(c.getColumnIndex("dungluong"))));
+            Integer mahang = Integer.parseInt(c.getString(c.getColumnIndex("mahang")));
+            try {
+                obj.setMahang(mahang);
+            } catch (IllegalArgumentException e) {
+                obj.setMahang(0);
+            }
+            Integer masp = Integer.parseInt(c.getString(c.getColumnIndex("masp")));
+            try {
+                obj.setMasp(masp);
+            } catch (IllegalArgumentException e) {
+                obj.setMahang(0);
+            }
+            String tensp = c.getString(c.getColumnIndex("tensp"));
+            try {
+                obj.setTensp(tensp);
+            } catch (IllegalArgumentException e) {
+                obj.setTensp("Sản phẩm đã bị xoá");
+            }
+            Float manhinh = Float.parseFloat(c.getString(c.getColumnIndex("manhinh")));
+            try {
+                obj.setManhinh(manhinh);
+            } catch (IllegalArgumentException e) {
+                obj.setMahang(0);
+            }
+            Integer gia = Integer.parseInt(c.getString(c.getColumnIndex("gia")));
+            try {
+                obj.setGia(gia);
+            } catch (IllegalArgumentException e) {
+                obj.setMahang(0);
+            }
+            Integer ram = Integer.parseInt(c.getString(c.getColumnIndex("ram")));
+            try {
+                obj.setRam(ram);
+            } catch (IllegalArgumentException e) {
+                obj.setMahang(0);
+            }
+            Integer dungluong = Integer.parseInt(c.getString(c.getColumnIndex("dungluong")));
+            try {
+                obj.setRam(dungluong);
+            } catch (IllegalArgumentException e) {
+                obj.setMahang(0);
+            }
             // Check if "anh" column is not null before parsing the URI
             String anhString = c.getString(c.getColumnIndex("anh"));
             if (anhString != null) {
@@ -98,7 +133,12 @@ public class SanPhamDAO {
     public SanPham getID(String id){
         String sql="select * from Sanpham where masp=?";
         List<SanPham> list=getData(sql,id);
-        return list.get(0);
+        if (!list.isEmpty()) {
+            return list.get(0);
+        } else {
+            // Handle the case where the list is empty
+            return null;  // Or some other appropriate value
+        }
     }
 
 

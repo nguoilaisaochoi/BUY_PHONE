@@ -47,8 +47,8 @@ public class HoaDonAdapter extends ArrayAdapter<GioHang> {
     TextView   tensp, tongtien,tinhtrang;
 
     HoaDonFragment fragment;
-    Button xem;
 
+    Integer check=0;
     public HoaDonAdapter(@NonNull Context context, HoaDonFragment hoaDonKHFragment, ArrayList<GioHang> lists) {
         super(context, 0, lists);
         this.context = context;
@@ -102,7 +102,12 @@ public class HoaDonAdapter extends ArrayAdapter<GioHang> {
             StringBuilder allsp = new StringBuilder();
             for (GioHang item : groupItems) {
                 SanPham sanPham = sanPhamDAO.getID(String.valueOf(item.getMasp()));
-                allsp.append(sanPham.getTensp());
+                if (sanPham!=null){
+                    allsp.append(sanPham.getTensp());
+                }else{
+                    allsp.append("Sản phẩm đã bị xoá");
+                    check=-1;
+                }
                 allsp.append(" ("+item.getSoluong()+")");
                 allsp.append(", ");
                 tongtien=v.findViewById(R.id.tvtongtien);
@@ -110,16 +115,21 @@ public class HoaDonAdapter extends ArrayAdapter<GioHang> {
                 tongtien.setText("Tổng tiền: " +formattedAmount );
                 tinhtrang=v.findViewById(R.id.tvtinhtrang);
                 String ttrang=item.getTinhtrang();
-                if (ttrang.equals("Chờ xử lí")) {
-                    // Nếu tình trạng là "Chờ xử lý", thêm chữ "Tình trạng:" và đặt màu sắc thành vàng
-                    tinhtrang.setText(ttrang);
-                    tinhtrang.setTextColor(0xFFF39C12);
-                }  else if (ttrang.equals("Hết hàng")) {
-                    tinhtrang.setText(ttrang);
+                if (check>=0){
+                    if (ttrang.equals("Chờ xử lí")) {
+                        tinhtrang.setText(ttrang);
+                        tinhtrang.setTextColor(0xFFF39C12);
+                    } else if (ttrang.equals("Hết hàng")) {
+                        tinhtrang.setText(ttrang);
+                        tinhtrang.setTextColor(0xFFCD1212);
+                    } else if (ttrang.equals("Đã giao")) {
+                        tinhtrang.setText(ttrang);
+                        tinhtrang.setTextColor(0xFF27AE60);
+                    }
+                }else{
+                    String Del="Bị huỷ do có sản phảm không tồn tại";
+                    tinhtrang.setText(Del);
                     tinhtrang.setTextColor(0xFFCD1212);
-                } else if (ttrang.equals("Đã giao")) {
-                    tinhtrang.setText(ttrang);
-                    tinhtrang.setTextColor(0xFF27AE60);
                 }
             }
             tensp = v.findViewById(R.id.tvtensp);
@@ -131,7 +141,7 @@ public class HoaDonAdapter extends ArrayAdapter<GioHang> {
             }
             this.tensp.setText("Sản phẩm đã mua: \n" + tensp);
         }
-
+        check=0;
         return v;
     }
 
