@@ -95,13 +95,13 @@ public class SanPhamDAO {
             try {
                 obj.setRam(ram);
             } catch (IllegalArgumentException e) {
-                obj.setMahang(0);
+                obj.setRam(0);
             }
             Integer dungluong = Integer.parseInt(c.getString(c.getColumnIndex("dungluong")));
             try {
-                obj.setRam(dungluong);
+                obj.setDungluong(dungluong);
             } catch (IllegalArgumentException e) {
-                obj.setMahang(0);
+                obj.setDungluong(0);
             }
             // Check if "anh" column is not null before parsing the URI
             String anhString = c.getString(c.getColumnIndex("anh"));

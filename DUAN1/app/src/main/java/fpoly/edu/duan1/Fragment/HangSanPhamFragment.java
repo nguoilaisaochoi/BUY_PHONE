@@ -177,6 +177,8 @@ public class HangSanPhamFragment extends Fragment {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow().setAttributes(layoutParams);
         //
+        //xoá data ảnh trước đó
+        selectedImageUri = null;
         huy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -195,12 +197,15 @@ public class HangSanPhamFragment extends Fragment {
                             .listener(new RequestListener<Drawable>() {
                                 @Override
                                 public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                    selectedImageUri = null;
                                     return false;
                                 }
 
                                 @Override
                                 public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                    selectedImageUri = Uri.parse(item.getAnh().toString());
                                     return false;
+
                                 }
                             }).into(anh);
                 } catch (Exception e) {
@@ -254,6 +259,7 @@ public class HangSanPhamFragment extends Fragment {
                             customToast.setDuration(Toast.LENGTH_SHORT);
                             customToast.setView(customToastView);
                             customToast.show();
+                            selectedImageUri = null;
                             //Toast.makeText(context, "Đã sửa", Toast.LENGTH_SHORT).show();
                         } else {
                             Context context = getContext();
@@ -313,20 +319,7 @@ public class HangSanPhamFragment extends Fragment {
         }
     }
 
-    private String getRealPathFromURI(Uri contentUri) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = requireContext().getContentResolver().query(contentUri, projection, null, null, null);
 
-        if (cursor == null) {
-            return contentUri.getPath(); // Path directly from URI
-        }
-
-        cursor.moveToFirst();
-        int columnIndex = cursor.getColumnIndex(projection[0]);
-        String filePath = cursor.getString(columnIndex);
-        cursor.close();
-        return filePath;
-    }
 
     public boolean suaHangSanPham(int position) {
         item = list.get(position);
@@ -355,6 +348,23 @@ public class HangSanPhamFragment extends Fragment {
             customToast.setView(customToastView);
             customToast.show();
             check = -1;
+        }
+
+        for (HangSp item : list) {
+            if (tvhangsp.getText().toString().equals(item.getTenloai())) {
+                Context context = getContext();
+                LayoutInflater inflater = getLayoutInflater();
+                View customToastView = inflater.inflate(R.layout.customtoast, null);
+                TextView textView = customToastView.findViewById(R.id.custom_toast_message);
+                textView.setText("Tên hãng đã tồn tại");
+
+                Toast customToast = new Toast(context);
+                customToast.setDuration(Toast.LENGTH_SHORT);
+                customToast.setView(customToastView);
+                customToast.show();
+                check = -1;
+                break;
+            }
         }
         return check;
     }

@@ -184,6 +184,8 @@ public class SanPhamAdminFragment extends Fragment {
         luusp = dialog.findViewById(R.id.btnluu);
         huysp = dialog.findViewById(R.id.btnhuy);
         //
+        //xoá data ảnh trước đó
+        selectedImageUri = null;
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
         layoutParams.copyFrom(dialog.getWindow().getAttributes());
         layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
@@ -391,6 +393,22 @@ public class SanPhamAdminFragment extends Fragment {
             customToast.setView(customToastView);
             customToast.show();
             check = -1;
+        }
+        for (SanPham item : list) {
+            if (tensp.getText().toString().equals(item.getTensp())) {
+                Context context = getContext();
+                LayoutInflater inflater = getLayoutInflater();
+                View customToastView = inflater.inflate(R.layout.customtoast, null);
+                TextView textView = customToastView.findViewById(R.id.custom_toast_message);
+                textView.setText("Tên sản phẩm đã tồn tại");
+
+                Toast customToast = new Toast(context);
+                customToast.setDuration(Toast.LENGTH_SHORT);
+                customToast.setView(customToastView);
+                customToast.show();
+                check = -1;
+                break;
+            }
         }
         return check;
     }
