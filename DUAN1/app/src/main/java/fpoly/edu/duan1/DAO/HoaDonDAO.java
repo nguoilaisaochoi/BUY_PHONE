@@ -175,8 +175,8 @@ public class HoaDonDAO {
         // Append end time to denNgay
         denNgay = denNgay + endTime;
 
-        String sqlDoanhThu = "SELECT SUM(tongtien) AS doanhthu FROM Hoadon " +
-                "WHERE ngay >= '" + tuNgay + "' AND ngay <= '" + denNgay + "';";
+        String sqlDoanhThu = "SELECT SUM(tongtien) AS doanhthu FROM Hoadon WHERE tinhtrang='Đã giao' " +
+                "AND ngay >= '" + tuNgay + "' AND ngay <= '" + denNgay + "';";
         List<Integer> list = new ArrayList<Integer>();
         Cursor c = db.rawQuery(sqlDoanhThu, null);
 
