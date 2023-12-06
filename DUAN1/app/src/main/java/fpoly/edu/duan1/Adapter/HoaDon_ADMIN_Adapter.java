@@ -59,7 +59,6 @@ public class HoaDon_ADMIN_Adapter extends ArrayAdapter<GioHang> {
     LinearLayout ttxacnhan;
 
     Integer check = 0;
-    private boolean isLdVisible = false;
 
     public HoaDon_ADMIN_Adapter(@NonNull Context context, HoaDonFragment hoaDonKHFragment, ArrayList<GioHang> lists) {
         super(context, 0, lists);
@@ -105,10 +104,9 @@ public class HoaDon_ADMIN_Adapter extends ArrayAdapter<GioHang> {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(R.layout.hoa_don_admin_one, null);
         }
+
         String dateKey = groupDates.get(position);
         List<GioHang> groupItems = groupedItems.get(dateKey);
-
-        //  ở ngoài vòng lặp
         LinearLayout ld = v.findViewById(R.id.ld);
         EditText  lydo = v.findViewById(R.id.etlydo);
         if (groupItems != null && !groupItems.isEmpty()) {
@@ -117,7 +115,11 @@ public class HoaDon_ADMIN_Adapter extends ArrayAdapter<GioHang> {
             StringBuilder allsp = new StringBuilder();
             for (GioHang item : groupItems) {
                 //tinh trang
-                ld.setVisibility(View.GONE);
+                if (item.isLdVisible()) {
+                    ld.setVisibility(View.VISIBLE);
+                } else {
+                    ld.setVisibility(View.GONE);
+                }
                 TextView tinhtrang = v.findViewById(R.id.ad_tvtinhtrang);
                 String ttrang = item.getTinhtrang();
                 ttxacnhan = v.findViewById(R.id.xacnhan);
@@ -174,16 +176,26 @@ public class HoaDon_ADMIN_Adapter extends ArrayAdapter<GioHang> {
                 tuchoi.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        isLdVisible = !isLdVisible; //isLdVisible==true
-                        ld.setVisibility(isLdVisible ? View.VISIBLE : View.GONE);
+                        // Set trạng thái isLdVisible cho mục hiện tại khi nhấn nút "tuchoi"
+                        item.setLdVisible(!item.isLdVisible());
+                        notifyDataSetChanged(); // Cập nhật Adapter để hiển thị thay đổi
+                        //thu hồi bàn phím ảo
+                        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                     }
                 });
                 huy.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ld.setVisibility(View.GONE);
+                        // Set trạng thái isLdVisible cho mục hiện tại khi nhấn nút "tuchoi"
+                        item.setLdVisible(false);
+                        notifyDataSetChanged(); // Cập nhật Adapter để hiển thị thay đổi
+                        //thu hồi bàn phím ảo
+                        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                     }
                 });
+
                 xacnhan.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -197,6 +209,7 @@ public class HoaDon_ADMIN_Adapter extends ArrayAdapter<GioHang> {
                         }
                     }
                 });
+
                 giaohang = v.findViewById(R.id.btn_giao);
                 giaohang.setOnClickListener(new View.OnClickListener() {
                     @Override

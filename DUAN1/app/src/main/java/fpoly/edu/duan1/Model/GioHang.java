@@ -22,6 +22,8 @@ public class GioHang {
 
     private String tuchoi;
 
+    private boolean isLdVisible;
+
     public GioHang() {
     }
 
@@ -41,6 +43,14 @@ public class GioHang {
         this.tongtien = tongtien;
         this.soluong = soluong;
         this.mahang = mahang;
+    }
+
+    public boolean isLdVisible() {
+        return isLdVisible;
+    }
+
+    public void setLdVisible(boolean ldVisible) {
+        isLdVisible = ldVisible;
     }
 
     public String getTuchoi() {

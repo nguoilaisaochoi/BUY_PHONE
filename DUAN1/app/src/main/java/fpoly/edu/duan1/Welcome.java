@@ -28,7 +28,9 @@ public class Welcome extends AppCompatActivity {
 
 
     public void ycquyen(){
-        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED){
+        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+            // Quyền đã được cấp, thực hiện công việc cần thiết ở đây
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -37,11 +39,13 @@ public class Welcome extends AppCompatActivity {
                     finish();
                 }
             }, 1500);
-        }else {
-            String[] quyen={Manifest.permission.READ_EXTERNAL_STORAGE};
-            requestPermissions(quyen,REQUEST_PERMISSION_CODE);
+        } else {
+            // Quyền chưa được cấp, yêu cầu quyền
+            String[] quyen = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            requestPermissions(quyen, REQUEST_PERMISSION_CODE);
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

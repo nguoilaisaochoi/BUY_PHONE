@@ -75,12 +75,13 @@ public class HangSanPhamFragment extends Fragment {
     ImageView anh;
 
     Dialog dialog;
-    private static final int PICK_IMAGE_REQUEST = 1;
-    private String imagePath;
+
+
     Uri selectedImageUri;
 
     SearchView searchView;
 
+    int checksua = 1;
     private ActivityResultLauncher<Intent> galleryLauncher;
 
     @Nullable
@@ -189,7 +190,7 @@ public class HangSanPhamFragment extends Fragment {
             tvmahang.setText(String.valueOf(item.getMahang()));
             tvmahang.setVisibility(View.GONE);//mahang bị ẩn
             tvhangsp.setText(item.getTenloai());
-            //anh.setImageURI(item.getAnh());
+            checksua = -1;
             if (item != null) {
                 try {
                     Glide.with(context).load(item.getAnh()).dontAnimate().override(240, 240).skipMemoryCache(false).error(R.drawable.baseline_image_24) // Add an error drawable
@@ -197,13 +198,11 @@ public class HangSanPhamFragment extends Fragment {
                             .listener(new RequestListener<Drawable>() {
                                 @Override
                                 public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                    selectedImageUri = null;
                                     return false;
                                 }
 
                                 @Override
                                 public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                    selectedImageUri = Uri.parse(item.getAnh().toString());
                                     return false;
 
                                 }
@@ -219,7 +218,6 @@ public class HangSanPhamFragment extends Fragment {
                     item = new HangSp();
                     item.setTenloai(String.valueOf(tvhangsp.getText()));
                     item.setAnh(selectedImageUri);
-                    // Lưu đường dẫn ảnh vào cơ sở dữ liệu
                     if (type == 0) {
                         if (dao.insert(item) > 0) {
                             Context context = getContext();
@@ -248,6 +246,7 @@ public class HangSanPhamFragment extends Fragment {
                         }
                     } else {
                         item.setMahang(Integer.parseInt(tvmahang.getText().toString()));
+                        checksua = 1;
                         if (dao.update(item) > 0) {
                             Context context = getContext();
                             LayoutInflater inflater = getLayoutInflater();
@@ -320,7 +319,6 @@ public class HangSanPhamFragment extends Fragment {
     }
 
 
-
     public boolean suaHangSanPham(int position) {
         item = list.get(position);
         opendialog(getActivity(), 1); // 1 update
@@ -349,21 +347,22 @@ public class HangSanPhamFragment extends Fragment {
             customToast.show();
             check = -1;
         }
+        if (checksua > 0) {
+            for (HangSp item : list) {
+                if (tvhangsp.getText().toString().equals(item.getTenloai())) {
+                    Context context = getContext();
+                    LayoutInflater inflater = getLayoutInflater();
+                    View customToastView = inflater.inflate(R.layout.customtoast, null);
+                    TextView textView = customToastView.findViewById(R.id.custom_toast_message);
+                    textView.setText("Tên hãng đã tồn tại");
 
-        for (HangSp item : list) {
-            if (tvhangsp.getText().toString().equals(item.getTenloai())) {
-                Context context = getContext();
-                LayoutInflater inflater = getLayoutInflater();
-                View customToastView = inflater.inflate(R.layout.customtoast, null);
-                TextView textView = customToastView.findViewById(R.id.custom_toast_message);
-                textView.setText("Tên hãng đã tồn tại");
-
-                Toast customToast = new Toast(context);
-                customToast.setDuration(Toast.LENGTH_SHORT);
-                customToast.setView(customToastView);
-                customToast.show();
-                check = -1;
-                break;
+                    Toast customToast = new Toast(context);
+                    customToast.setDuration(Toast.LENGTH_SHORT);
+                    customToast.setView(customToastView);
+                    customToast.show();
+                    check = -1;
+                    break;
+                }
             }
         }
         return check;
