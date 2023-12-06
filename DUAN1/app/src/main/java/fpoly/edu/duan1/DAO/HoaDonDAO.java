@@ -39,6 +39,7 @@ public class HoaDonDAO {
         values.put("ngay",formatter.format(obj.getNgay()));
         values.put("makh", obj.getMakh());
         values.put("tinhtrang", obj.getTinhtrang());
+        values.put("tuchoi", obj.getTuchoi());
         SanPhamDAO sanPhamDAO = new SanPhamDAO(context);
         SanPham sanPham = sanPhamDAO.getID(String.valueOf(obj.getMasp()));
         int gia = sanPham.getGia();
@@ -56,6 +57,7 @@ public class HoaDonDAO {
         values.put("ngay",formatter.format(obj.getNgay()));
         values.put("makh", obj.getMakh());
         values.put("tinhtrang", obj.getMakh());
+        values.put("tuchoi", obj.getTuchoi());
         SanPhamDAO sanPhamDAO = new SanPhamDAO(context);
         SanPham sanPham = sanPhamDAO.getID(String.valueOf(obj.getMasp()));
         int gia = sanPham.getGia();
@@ -65,9 +67,10 @@ public class HoaDonDAO {
         return db.update("Hoadon", values, "magh=?", new String[]{String.valueOf(obj.getMagh())});
     }
 
-    public int updateTinhTrang(String ngay, String newTinhTrang) {
+    public int updateTinhTrang(String ngay, String newTinhTrang,String tuchoi) {
         ContentValues values = new ContentValues();
         values.put("tinhtrang", newTinhTrang);
+        values.put("tuchoi", tuchoi);
         return db.update("Hoadon", values, "ngay=?", new String[]{ngay});
     }
 
@@ -87,10 +90,11 @@ public class HoaDonDAO {
             obj.setSoluong(Integer.parseInt(c.getString(c.getColumnIndex("soluong"))));
             obj.setMakh(c.getString(c.getColumnIndex("makh")));
             obj.setTongtien(Integer.parseInt(c.getString(c.getColumnIndex("tongtien"))));
+            obj.setTinhtrang(c.getString(c.getColumnIndex("tinhtrang")));
+            obj.setTuchoi(c.getString(c.getColumnIndex("tuchoi")));
             String dateString = c.getString(c.getColumnIndex("ngay"));
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
             LocalDateTime ngay = LocalDateTime.parse(dateString, formatter);
-            obj.setTinhtrang(c.getString(c.getColumnIndex("tinhtrang")));
             obj.setNgay(ngay);
 
             list.add(obj);

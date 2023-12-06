@@ -49,6 +49,7 @@ public class DBHelper extends SQLiteOpenHelper {
             "tongtien INTEGER NOT NULL," +
             "ngay     DATE," +
             "tinhtrang   TEXT," +
+            "tuchoi   TEXT," +
             "soluong INTEGER NOT NULL" +
             ")";
 

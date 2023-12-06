@@ -1,16 +1,25 @@
 package fpoly.edu.duan1.Adapter;
 
 import android.content.Context;
+import android.os.Build;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -40,14 +49,18 @@ public class HoaDon_ADMIN_Adapter extends ArrayAdapter<GioHang> {
 
     private SanPhamDAO sanPhamDAO;
 
-    TextView   tenkh,tensp, tongtien,tinhtrang,sdt,diachi;
+    TextView tenkh, tensp, tongtien, sdt, diachi, lydotc;
+
 
     HoaDonFragment fragment;
-    Button tuchoi,giaohang;
+    Button tuchoi, giaohang, xacnhan, huy;
 
+    CardView cardView;
     LinearLayout ttxacnhan;
 
-    Integer check=0;
+    Integer check = 0;
+    private boolean isLdVisible = false;
+
     public HoaDon_ADMIN_Adapter(@NonNull Context context, HoaDonFragment hoaDonKHFragment, ArrayList<GioHang> lists) {
         super(context, 0, lists);
         this.context = context;
@@ -88,77 +101,107 @@ public class HoaDon_ADMIN_Adapter extends ArrayAdapter<GioHang> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View v = convertView;
-
         if (v == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(R.layout.hoa_don_admin_one, null);
         }
-
         String dateKey = groupDates.get(position);
         List<GioHang> groupItems = groupedItems.get(dateKey);
+
+        //  ở ngoài vòng lặp
+        LinearLayout ld = v.findViewById(R.id.ld);
+        EditText  lydo = v.findViewById(R.id.etlydo);
         if (groupItems != null && !groupItems.isEmpty()) {
             TextView headerTextView = v.findViewById(R.id.tvngay);
             headerTextView.setText("Ngày: " + dateKey);
             StringBuilder allsp = new StringBuilder();
             for (GioHang item : groupItems) {
                 //tinh trang
-                tinhtrang=v.findViewById(R.id.tvtinhtrang);
-                String ttrang=item.getTinhtrang();
-                ttxacnhan=v.findViewById(R.id.xacnhan);
-                tenkh=v.findViewById(R.id.tvtenkh);
-                KhachHang kh=khachHangDAO.getID(item.getMakh());
-                tenkh.setText("Tên khách hàng: "+kh.getHoTen());
+                ld.setVisibility(View.GONE);
+                TextView tinhtrang = v.findViewById(R.id.ad_tvtinhtrang);
+                String ttrang = item.getTinhtrang();
+                ttxacnhan = v.findViewById(R.id.xacnhan);
+                xacnhan = v.findViewById(R.id.btn_xacnhan);
+                huy = v.findViewById(R.id.btn_huy);
+                cardView=v.findViewById(R.id.cardview);
+                tenkh = v.findViewById(R.id.tvtenkh);
+                KhachHang kh = khachHangDAO.getID(item.getMakh());
+                tenkh.setText("Tên khách hàng: " + kh.getHoTen());
                 SanPham sanPham = sanPhamDAO.getID(String.valueOf(item.getMasp()));
-                if (sanPham!=null){
+                if (sanPham != null) {
                     allsp.append(sanPham.getTensp());
-                }else{
+                } else {
                     allsp.append("Sản phẩm đã bị xoá");
-                    check=-1;
+                    check = -1;
                 }
-                allsp.append(" ("+item.getSoluong()+")");
+                allsp.append(" (" + item.getSoluong() + ")");
                 allsp.append(", ");
-                tongtien=v.findViewById(R.id.tvtongtien);
+                tongtien = v.findViewById(R.id.tvtongtien);
                 String formattedAmount = chuyendvtien(hoaDonDAO.sumTongTienTheoMaKHTheoNgay(item.getMakh(), dateKey));
-                tongtien.setText("Tổng tiền: " +formattedAmount );
-                sdt=v.findViewById(R.id.tvsdt);
-                sdt.setText("Số điện thoại: "+kh.getSdt());
-                diachi=v.findViewById(R.id.tvdiachi);
-                diachi.setText("Địa chỉ: "+kh.getDiachi());
-                if (check>=0){
-                    if (ttrang.equals("Chờ xử lí")) {
-                        tinhtrang.setText(ttrang);
+                tongtien.setText("Tổng tiền: " + formattedAmount);
+                sdt = v.findViewById(R.id.tvsdt);
+                sdt.setText("Số điện thoại: " + kh.getSdt());
+                diachi = v.findViewById(R.id.tvdiachi);
+                diachi.setText("Địa chỉ: " + kh.getDiachi());
+                lydotc = v.findViewById(R.id.tvlydotuchoi);
+                if (check >= 0) {
+                    if (ttrang.equals("Đang giao hàng...")) {
+                        String trangthai = "Chờ giao hàng";
+                        tinhtrang.setText(trangthai);
                         tinhtrang.setTextColor(0xFFF39C12);
                         ttxacnhan.setVisibility(View.VISIBLE);
-                    } else if (ttrang.equals("Hết hàng")) {
-                        tinhtrang.setText(ttrang);
+                        lydotc.setVisibility(View.GONE);
+                    } else if (ttrang.equals("Cửa hàng từ chối giao hàng")) {
+                        String trangthai = "Đã từ chối";
+                        tinhtrang.setText(trangthai);
                         tinhtrang.setTextColor(0xFFCD1212);
                         ttxacnhan.setVisibility(View.GONE);
+                        lydotc.setText("Lý do từ chối: " + item.getTuchoi());
                     } else if (ttrang.equals("Đã giao")) {
                         tinhtrang.setText(ttrang);
                         tinhtrang.setTextColor(0xFF27AE60);
                         ttxacnhan.setVisibility(View.GONE);
+                        lydotc.setVisibility(View.GONE);
                     }
-                }else{
-                    String Del="Bị huỷ do có sản phảm không tồn tại";
+                } else {
+                    String Del = "Bị huỷ do có sản phảm không tồn tại";
                     tinhtrang.setText(Del);
                     tinhtrang.setTextColor(0xFFCD1212);
                     ttxacnhan.setVisibility(View.GONE);
                 }
 
-                tuchoi=v.findViewById(R.id.btn_tuchoi);
+                tuchoi = v.findViewById(R.id.btn_tuchoi);
                 tuchoi.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Update the UI to reflect the changes
-                        hoaDonDAO.updateTinhTrang(dateKey, "Hết hàng");
-                        fragment.capnhatlv();
+                        isLdVisible = !isLdVisible; //isLdVisible==true
+                        ld.setVisibility(isLdVisible ? View.VISIBLE : View.GONE);
                     }
                 });
-                giaohang=v.findViewById(R.id.btn_giao);
+                huy.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ld.setVisibility(View.GONE);
+                    }
+                });
+                xacnhan.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        lydo.requestFocus();
+                        Log.d("YourTag", "lydo: " + lydo.getText().toString());
+                        String tuchoi = lydo.getText().toString();
+                        if (checklydo(tuchoi) > 0) {
+                            hoaDonDAO.updateTinhTrang(dateKey, "Cửa hàng từ chối giao hàng", tuchoi);
+                            ld.setVisibility(View.GONE);
+                            fragment.capnhatlv();
+                        }
+                    }
+                });
+                giaohang = v.findViewById(R.id.btn_giao);
                 giaohang.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        hoaDonDAO.updateTinhTrang(dateKey, "Đã giao");
+                        hoaDonDAO.updateTinhTrang(dateKey, "Đã giao", "");
                         fragment.capnhatlv();
                     }
                 });
@@ -172,7 +215,7 @@ public class HoaDon_ADMIN_Adapter extends ArrayAdapter<GioHang> {
             }
             this.tensp.setText("Sản phẩm đã mua: \n" + tensp);
         }
-        check=0;
+        check = 0;
         return v;
     }
 
@@ -189,4 +232,21 @@ public class HoaDon_ADMIN_Adapter extends ArrayAdapter<GioHang> {
         return currencyFormat.format(amount);
     }
 
+    public int checklydo(String txtlydo) {
+        int checkld = 1;
+        if (txtlydo.length() == 0) {
+            Context context = getContext();
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View customToastView = inflater.inflate(R.layout.customtoast, null);
+            TextView textView = customToastView.findViewById(R.id.custom_toast_message);
+            textView.setText("Lý do từ chối trống");
+
+            Toast customToast = new Toast(context);
+            customToast.setDuration(Toast.LENGTH_SHORT);
+            customToast.setView(customToastView);
+            customToast.show();
+            checkld = -1;
+        }
+        return checkld;
+    }
 }

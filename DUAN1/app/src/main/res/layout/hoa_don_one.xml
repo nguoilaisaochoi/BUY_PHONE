@@ -66,6 +66,14 @@
                         android:textSize="20dp" />
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/tvlydotc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="serif"
+                    android:text="cc"
+                    android:textSize="20dp" />
+
 
             </LinearLayout>
 

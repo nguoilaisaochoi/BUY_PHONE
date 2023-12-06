@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 
 import fpoly.edu.duan1.DAO.HoaDonDAO;
 import fpoly.edu.duan1.DAO.KhachHangDAO;
@@ -44,7 +45,8 @@ public class HoaDonAdapter extends ArrayAdapter<GioHang> {
 
     private SanPhamDAO sanPhamDAO;
 
-    TextView   tensp, tongtien,tinhtrang;
+    TextView   tensp, tongtien,tinhtrang,lydotc;
+
 
     HoaDonFragment fragment;
 
@@ -115,16 +117,20 @@ public class HoaDonAdapter extends ArrayAdapter<GioHang> {
                 tongtien.setText("Tổng tiền: " +formattedAmount );
                 tinhtrang=v.findViewById(R.id.tvtinhtrang);
                 String ttrang=item.getTinhtrang();
+                lydotc=v.findViewById(R.id.tvlydotc);
                 if (check>=0){
-                    if (ttrang.equals("Chờ xử lí")) {
+                    if (ttrang.equals("Đang giao hàng...")) {
                         tinhtrang.setText(ttrang);
                         tinhtrang.setTextColor(0xFFF39C12);
-                    } else if (ttrang.equals("Hết hàng")) {
+                        lydotc.setVisibility(View.GONE);
+                    } else if (ttrang.equals("Cửa hàng từ chối giao hàng")) {
                         tinhtrang.setText(ttrang);
+                        lydotc.setText("Lý do từ chối: "+item.getTuchoi());
                         tinhtrang.setTextColor(0xFFCD1212);
                     } else if (ttrang.equals("Đã giao")) {
                         tinhtrang.setText(ttrang);
                         tinhtrang.setTextColor(0xFF27AE60);
+                        lydotc.setVisibility(View.GONE);
                     }
                 }else{
                     String Del="Bị huỷ do có sản phảm không tồn tại";

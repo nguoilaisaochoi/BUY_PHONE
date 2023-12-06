@@ -89,10 +89,12 @@ public class SanPhamAdminFragment extends Fragment {
     SearchView searchView;
 
     int mahang, positionhangsp;
+    int checksua = 1;
     SanPham item;
 
     Uri selectedImageUri;
     private ActivityResultLauncher<Intent> galleryLauncher;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -217,6 +219,7 @@ public class SanPhamAdminFragment extends Fragment {
             }
         });
         if (type != 0) {
+            checksua = -1;
             for (int i = 0; i < listHangSp.size(); i++)
                 if (item.getMahang() == (listHangSp.get(i).getMahang())) {
                     positionhangsp = i;
@@ -269,6 +272,7 @@ public class SanPhamAdminFragment extends Fragment {
                     item.setDungluong(Integer.parseInt(dungluong.getText().toString()));
                     item.setGia(Integer.parseInt(giasp.getText().toString()));
                     item.setAnh(selectedImageUri);
+                    checksua=1;
                     // Lưu đường dẫn ảnh vào cơ sở dữ liệu
                     if (type == 0) {
                         if (dao.insert(item) > 0) {
@@ -394,24 +398,28 @@ public class SanPhamAdminFragment extends Fragment {
             customToast.show();
             check = -1;
         }
-        for (SanPham item : list) {
-            if (tensp.getText().toString().equals(item.getTensp())) {
-                Context context = getContext();
-                LayoutInflater inflater = getLayoutInflater();
-                View customToastView = inflater.inflate(R.layout.customtoast, null);
-                TextView textView = customToastView.findViewById(R.id.custom_toast_message);
-                textView.setText("Tên sản phẩm đã tồn tại");
+        if (checksua > 0) {
+            for (SanPham item : list) {
+                if (tensp.getText().toString().equals(item.getTensp())&&manhinh.getText().toString().equals(String.valueOf(item.getManhinh()))&&ram.getText().toString().equals(String.valueOf(item.getRam()))&&dungluong.getText().toString().equals(String.valueOf(item.getDungluong()))) {
+                    Context context = getContext();
+                    LayoutInflater inflater = getLayoutInflater();
+                    View customToastView = inflater.inflate(R.layout.customtoast, null);
+                    TextView textView = customToastView.findViewById(R.id.custom_toast_message);
+                    textView.setText("Sản phẩm đã tồn tại");
 
-                Toast customToast = new Toast(context);
-                customToast.setDuration(Toast.LENGTH_SHORT);
-                customToast.setView(customToastView);
-                customToast.show();
-                check = -1;
-                break;
+                    Toast customToast = new Toast(context);
+                    customToast.setDuration(Toast.LENGTH_SHORT);
+                    customToast.setView(customToastView);
+                    customToast.show();
+                    check = -1;
+                    break;
+                }
             }
         }
+
         return check;
     }
+
     private void handleImageResult(Uri imageUri) {
         if (imageUri != null) {
             selectedImageUri = imageUri;
@@ -431,4 +439,5 @@ public class SanPhamAdminFragment extends Fragment {
             Toast.makeText(getActivity(), "Không thể lấy đường dẫn ảnh", Toast.LENGTH_SHORT).show();
         }
     }
+
 }

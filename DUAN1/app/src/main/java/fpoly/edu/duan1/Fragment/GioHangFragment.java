@@ -89,7 +89,7 @@ public class GioHangFragment extends Fragment {
                         gioHang.setNgay(getCurrentDateTime());
 
                         gioHang.setMakh(id);
-                        gioHang.setTinhtrang("Chờ xử lí");
+                        gioHang.setTinhtrang("Đang giao hàng...");
                         // Chèn mục vào GioHangDAO
                         long result = hoaDonDAO.insert(gioHang, getActivity());
 

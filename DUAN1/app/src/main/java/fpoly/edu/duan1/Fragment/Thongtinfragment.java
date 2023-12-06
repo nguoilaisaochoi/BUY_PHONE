@@ -41,17 +41,18 @@ import java.io.IOException;
 
 import fpoly.edu.duan1.DAO.KhachHangDAO;
 import fpoly.edu.duan1.Model.KhachHang;
+import fpoly.edu.duan1.Model.SanPham;
 import fpoly.edu.duan1.R;
 
 public class Thongtinfragment extends Fragment {
 
     static KhachHangDAO dao;
 
-    EditText etten,etsdt,etdiachi;
+    EditText etten, etsdt, etdiachi;
 
-    TextView tvdiachi,tvsdt;
+    TextView tvdiachi, tvsdt;
 
-    Button btndoianh,btnluu;
+    Button btndoianh, btnluu;
 
     ImageView avt;
 
@@ -61,27 +62,28 @@ public class Thongtinfragment extends Fragment {
     Uri selectedImageUri;
     private ActivityResultLauncher<Intent> galleryLauncher;
     private static final String PREF_ROLE_KEY = "user_role";
+
     @SuppressLint("MissingInflatedId")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v=getLayoutInflater().inflate(R.layout.thong_tin_fragment,container,false);
+        View v = getLayoutInflater().inflate(R.layout.thong_tin_fragment, container, false);
         nav_name = getActivity().getSharedPreferences("name_Nav", MODE_PRIVATE);
         String id = nav_name.getString("makh", "");
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String userRole = sharedPreferences.getString(PREF_ROLE_KEY, "");
         dao = new KhachHangDAO(getContext());
         item = dao.getID(id);
-        etten=v.findViewById(R.id.etten);
+        etten = v.findViewById(R.id.etten);
         etten.setText(item.getHoTen());
-        tvsdt=v.findViewById(R.id.tv_tt_sdt);
-        etsdt=v.findViewById(R.id.etsdt);
+        tvsdt = v.findViewById(R.id.tv_tt_sdt);
+        etsdt = v.findViewById(R.id.etsdt);
         etsdt.setText(String.valueOf(item.getSdt()));
-        tvdiachi=v.findViewById(R.id.tv_tt_diachi);
-        etdiachi=v.findViewById(R.id.etdiachi);
+        tvdiachi = v.findViewById(R.id.tv_tt_diachi);
+        etdiachi = v.findViewById(R.id.etdiachi);
         etdiachi.setText(item.getDiachi());
-        avt=v.findViewById(R.id.imgavt);
-        if (userRole.equals("admin")){
+        avt = v.findViewById(R.id.imgavt);
+        if (userRole.equals("admin")) {
             etsdt.setVisibility(View.GONE);
             etdiachi.setVisibility(View.GONE);
             tvdiachi.setVisibility(View.GONE);
@@ -99,7 +101,7 @@ public class Thongtinfragment extends Fragment {
                         .listener(new RequestListener<Drawable>() {
                             @Override
                             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                selectedImageUri=null;
+                                selectedImageUri = null;
                                 return false;
                             }
 
@@ -113,43 +115,47 @@ public class Thongtinfragment extends Fragment {
             } catch (Exception e) {
             }
         }
-        btndoianh=v.findViewById(R.id.btndoianh);
+        btndoianh = v.findViewById(R.id.btndoianh);
         btndoianh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openGallery();
             }
         });
-        btnluu=v.findViewById(R.id.btnluutt);
+        btnluu = v.findViewById(R.id.btnluutt);
         btnluu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                item=new KhachHang();
-                item.setMakh(id);
-                item.setHoTen(etten.getText().toString());
-                item.setSdt(Integer.valueOf(etsdt.getText().toString()));
-                item.setDiachi(etdiachi.getText().toString());
-                item.setAvt(selectedImageUri);
-                if (dao.updateInfo(item)>0){
-                    Intent intent = new Intent("update_user_info");
-                    intent.putExtra("new_name", etten.getText().toString());
-                   if (selectedImageUri!=null){
-                       intent.putExtra("new_avatar", selectedImageUri.toString());
-                   }else {}
-                    LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent);
-                    Context context = getContext();
-                    LayoutInflater inflater = getLayoutInflater();
-                    View customToastView = inflater.inflate(R.layout.customtoast, null);
-                    TextView textView = customToastView.findViewById(R.id.custom_toast_message);
-                    textView.setText("Đổi thành công");
+                if (valiable() > 0) {
+                    item = new KhachHang();
+                    item.setMakh(id);
+                    item.setHoTen(etten.getText().toString());
+                    item.setSdt(Integer.valueOf(etsdt.getText().toString()));
+                    item.setDiachi(etdiachi.getText().toString());
+                    item.setAvt(selectedImageUri);
+                    if (dao.updateInfo(item) > 0) {
+                        Intent intent = new Intent("update_user_info");
+                        intent.putExtra("new_name", etten.getText().toString());
+                        if (selectedImageUri != null) {
+                            intent.putExtra("new_avatar", selectedImageUri.toString());
+                        } else {
+                        }
+                        LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent);
+                        Context context = getContext();
+                        LayoutInflater inflater = getLayoutInflater();
+                        View customToastView = inflater.inflate(R.layout.customtoast, null);
+                        TextView textView = customToastView.findViewById(R.id.custom_toast_message);
+                        textView.setText("Đổi thành công");
 
-                    Toast customToast = new Toast(context);
-                    customToast.setDuration(Toast.LENGTH_SHORT);
-                    customToast.setView(customToastView);
-                    customToast.show();
+                        Toast customToast = new Toast(context);
+                        customToast.setDuration(Toast.LENGTH_SHORT);
+                        customToast.setView(customToastView);
+                        customToast.show();
 
-                    //Toast.makeText(getContext(),"Đổi thành công", Toast.LENGTH_SHORT).show();
-                }else {}
+                        //Toast.makeText(getContext(),"Đổi thành công", Toast.LENGTH_SHORT).show();
+                    } else {
+                    }
+                }
             }
 
         });
@@ -166,6 +172,7 @@ public class Thongtinfragment extends Fragment {
                 });
         return v;
     }
+
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
@@ -173,6 +180,7 @@ public class Thongtinfragment extends Fragment {
         // Sử dụng ActivityResultLauncher để khởi động hoạt động thư viện
         galleryLauncher.launch(intent);
     }
+
     private void handleImageResult(Uri imageUri) {
         if (imageUri != null) {
             selectedImageUri = imageUri;
@@ -191,5 +199,23 @@ public class Thongtinfragment extends Fragment {
         } else {
             Toast.makeText(getActivity(), "Không thể lấy đường dẫn ảnh", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public int valiable() {
+        int check = 1;
+        if (etten.getText().length() == 0 || etsdt.getText().length() == 0 || etdiachi.getText().length() == 0) {
+            Context context = getContext();
+            LayoutInflater inflater = getLayoutInflater();
+            View customToastView = inflater.inflate(R.layout.customtoast, null);
+            TextView textView = customToastView.findViewById(R.id.custom_toast_message);
+            textView.setText("Không bỏ trống");
+
+            Toast customToast = new Toast(context);
+            customToast.setDuration(Toast.LENGTH_SHORT);
+            customToast.setView(customToastView);
+            customToast.show();
+            check = -1;
+        }
+        return check;
     }
 }

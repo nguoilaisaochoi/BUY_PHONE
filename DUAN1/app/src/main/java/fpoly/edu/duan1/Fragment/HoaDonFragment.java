@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -81,6 +82,5 @@ public class HoaDonFragment extends Fragment {
         }
         lvsp.setSelectionFromTop(firstVisibleItem, top);
     }
-    // Trong phương thức animateListView
 
 }

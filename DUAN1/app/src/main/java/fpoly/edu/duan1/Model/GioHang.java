@@ -20,6 +20,8 @@ public class GioHang {
 
     private String diachi;
 
+    private String tuchoi;
+
     public GioHang() {
     }
 
@@ -39,6 +41,14 @@ public class GioHang {
         this.tongtien = tongtien;
         this.soluong = soluong;
         this.mahang = mahang;
+    }
+
+    public String getTuchoi() {
+        return tuchoi;
+    }
+
+    public void setTuchoi(String tuchoi) {
+        this.tuchoi = tuchoi;
     }
 
     public String getDiachi() {
