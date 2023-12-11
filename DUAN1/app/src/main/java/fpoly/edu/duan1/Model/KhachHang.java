@@ -5,7 +5,7 @@ import android.net.Uri;
 public class KhachHang {
     private String makh;
     private String hoTen;
-    private Integer sdt;
+    private String sdt;
     private String matKhau;
 
     private String diachi;
@@ -15,7 +15,7 @@ public class KhachHang {
     public KhachHang() {
     }
 
-    public KhachHang(String makh, String hoTen, Integer sdt, String matKhau) {
+    public KhachHang(String makh, String hoTen, String sdt, String matKhau) {
         this.makh = makh;
         this.hoTen = hoTen;
         this.sdt = sdt;
@@ -54,11 +54,11 @@ public class KhachHang {
         this.hoTen = hoTen;
     }
 
-    public Integer getSdt() {
+    public String getSdt() {
         return sdt;
     }
 
-    public void setSdt(Integer sdt) {
+    public void setSdt(String sdt) {
         this.sdt = sdt;
     }
 

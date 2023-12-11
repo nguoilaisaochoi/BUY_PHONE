@@ -159,17 +159,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="gone"
+                    android:padding="10sp">
 
                     <TextView
                         android:id="@+id/textView2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10sp"
-                        android:layout_weight="1"
-                        android:textSize="18sp"
-                        android:text="Lý do từ chối" />
-
+                        android:text="Lý do từ chối"
+                        android:textSize="18sp" />
 
 
                     <EditText

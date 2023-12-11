@@ -130,7 +130,7 @@ public class Thongtinfragment extends Fragment {
                     item = new KhachHang();
                     item.setMakh(id);
                     item.setHoTen(etten.getText().toString());
-                    item.setSdt(Integer.valueOf(etsdt.getText().toString()));
+                    item.setSdt(etsdt.getText().toString());
                     item.setDiachi(etdiachi.getText().toString());
                     item.setAvt(selectedImageUri);
                     if (dao.updateInfo(item) > 0) {

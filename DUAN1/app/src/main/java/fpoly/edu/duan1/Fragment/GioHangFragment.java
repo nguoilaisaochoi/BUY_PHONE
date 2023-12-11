@@ -149,7 +149,7 @@ public class GioHangFragment extends Fragment {
         khachHangDAO=new KhachHangDAO(getContext());
         item=khachHangDAO.getID(id);
         int check = 1;
-        if (item.getSdt()==0||item.getDiachi().isEmpty()){
+        if (item.getSdt().isEmpty()||item.getDiachi().isEmpty()){
             Context context = getContext();
             LayoutInflater inflater = getLayoutInflater();
             View customToastView = inflater.inflate(R.layout.customtoast, null);

@@ -17,7 +17,7 @@ public class Data_SQLite {
             "    ('Xiaomi Mi 10T Pro', '16000000', '6.67', '8', '256', '3')," +
             "    ('Xiaomi Redmi 9A', '3000000', '6.53', '2', '32', '3');";
     public static final String INSERT_HANG_SP = "insert into Hangsp(tenloai) values" +
-            "('Iphone')," +
+            "('Apple')," +
             "('Samsung')," +
             "('Xiaomi')";
 }

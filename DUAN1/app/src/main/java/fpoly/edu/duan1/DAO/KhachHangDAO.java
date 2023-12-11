@@ -67,10 +67,10 @@ public class KhachHangDAO {
             String sdtString = c.getString(c.getColumnIndex("sdt"));
             obj.setDiachi(c.getString(c.getColumnIndex("diachi")));
             if (sdtString != null && !sdtString.isEmpty()) {
-                obj.setSdt(Integer.valueOf(sdtString));
+                obj.setSdt("0"+sdtString);
             } else {
                 // Xử lý khi "sdt" rỗng hoặc null
-                obj.setSdt(0); // Hoặc giá trị mặc định khác bạn mong muốn
+                obj.setSdt(""); // Hoặc giá trị mặc định khác bạn mong muốn
             }
             String daichiString = c.getString(c.getColumnIndex("diachi"));
             if (daichiString != null && !daichiString.isEmpty()) {
